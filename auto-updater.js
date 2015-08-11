@@ -60,15 +60,20 @@ module.exports = function( opciones ){
 		this.opc.autoupdate = (opciones != null && opciones.autoupdate == true) ? true : false; // Descarga automáticamente la nueva versión
 		this.opc.check_git = (opciones && opciones.check_git == false ) ? false : true;
 		//this.opc.autocheck = (opciones.autocheck == false) ? false : true; // Revisa al inicializarse. No da tiempo a setear los eventos
+		this.opc.devmode = (opciones && opciones.devmode == false) ? false : true;
 	};
 
 	AutoUpdater.forceCheck = function(){
 		var self = this;
 
-		// CheckGit
-		if ( this.opc.check_git && this._checkGit() ) return;
+		if(!this.opc.devmode) {
+			// CheckGit
+			if (this.opc.check_git && this._checkGit()) return;
 
-		this._loadClientJson();
+			this._loadClientJson();
+		}else{
+			this._getLocalCommitHash();
+		}
 	};
 
 	AutoUpdater.forceDownloadUpdate = function(){
